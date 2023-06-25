@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <!-- <meta charset="utf-8">-->
+     <title>Circa Admin Portal</title>
+     <link rel="stylesheet" href="static\style02.css">
+ </head>
+    <body>
+       
+      <section>
+        <div class="form-box01">
+            <div class="form-value">
+                <form >
+                    <h2>Welcome to Circa</h2>
+                    <br>
+                    <h3> Welcome to the Circa Admin portal. Please select from one of the below.</h3>
+                    <br><br>
+                    <div>
+                   <a href="{{url_for('moreInfo')}}"> <button type="button"  id="moreInfo">Find Out More</button></a>
+                   <br></div>
+                   <div>
+                   <a href="{{url_for('login')}}"> <button type="button"  id="login">Admin Login</button></a>
+                   </div>
+                </form>
+            </div>
+        </div>
+     </section>
+
+     <script type="Module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+        
+    </body>
+
+
+</html>
