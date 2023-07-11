@@ -1,4 +1,4 @@
-from flask_login import  current_user, login_user
+from flask_login import  logout_user, current_user, login_user, login_manager, LoginManager, AnonymousUserMixin
 from flask import Flask, render_template, request, url_for, redirect, logging, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -9,7 +9,10 @@ import pymysql
 
 
 app = Flask(__name__)
-#login_manager = LoginManager(app)
+
+login_manager = LoginManager(app)
+
+
 # SQLITE Database
 
 
@@ -27,7 +30,7 @@ app.app_context().push()
 
 #Creating the model for the database
 class orchard_admin(db.Model):
-    OR_ID = db.Column(db.Integer, primary_key=True) #creating a new column
+    OR_ID = db.Column(db.Integer, primary_key=True, autoincrement=True) #creating a new column
     OR_Name = db.Column(db.String(100), nullable=False, unique=True) #data type and specifics within ()
     OR_Owner = db.Column(db.String(50), nullable=False )
     OR_Location = db.Column(db.String(150), nullable=False)
@@ -74,6 +77,14 @@ class Contact(db.Model):
 '''
 
 
+@login_manager.user_loader
+def load_user(OR_ID):
+    return orchard_admin.query.get(int(OR_ID))
+
+class Anonymous(AnonymousUserMixin):
+  def __init__(self):
+    self.username = 'Guest'
+
 
 @app.route('/')
 def mainP():
@@ -98,33 +109,82 @@ def login():
         password = request.form.get("password")      
 
         if username == "Admin" and password == "Admin":
-           return render_template('CircaAdminHome.html')
+             
+         orchards = orchard_admin.query.order_by(orchard_admin.OR_Name).all()
+         return render_template('CircaAdminHome.html', orchard = orchards)
+             
         
 
+        if username == orchard_admin.query.filter_by(OR_AdminUN=username).first():
+             user = orchard_admin.query.filter_by(OR_AdminUN=username).first()
+
+             if not user or not check_password_hash(user.password, password):
+                 flash('Please check your login details and try again.')    
+                 return render_template('login.html')
+             login_user(user, remember=True) 
         else:
-             return render_template('login.html')
+            
+            return render_template('CircaAdminHome.html')
+
         
+            
     return render_template('login.html')
 
 @app.route('/add_orchard', methods=["POST", "GET"])
 def add_orchard():
     if request.method == "POST":
-            ID =  current_user.id
-            Name = request.form.get("email")
-            Owner = db.Column(db.String(50), nullable=False )
-            Location = db.Column(db.String(150), nullable=False)
-            AdminUN = db.Column(db.String(50), nullable=False, unique=True )
-            AdminPW = db.Column(db.String(50), nullable=False)
-            ADPhone = db.Column(db.String(13), nullable=False)
-            ADName = db.Column(db.String(50), nullable=False )
+            ID =  "001"
+            Name = request.form.get("ORname")
+            Owner = request.form.get("owner")
+            Location = request.form.get("location")
+            AdminUN = request.form.get("admUN")
+            AdminPW = request.form.get("admPw")
+            ADPhone = request.form.get("admPhone")
+            ADName = request.form.get("admName")
             new_orchard = orchard_admin(OR_ID=ID, OR_Name=Name, OR_Owner=Owner, OR_Location=Location, OR_AdminUN=AdminUN, OR_AdminPW=AdminPW, OR_ADPhone=ADPhone, OR_ADName=ADName)
             db.session.add(new_orchard)
             db.session.commit()
             flash('New orchard added')
-            return redirect('/adduser')
+            return render_template('CircaAdminHome.html')
     else:
-          orchards = orchard_admin.query.order_by(orchard_admin.first_letter)
-          return render_template('addOrchard.html', orchard=orchards)
+          orchards = orchard_admin.query.order_by(orchard_admin.OR_Name)
+          return render_template('addOR.html', orchard=orchards)
+   
+   
+@app.route("/delete/<int:id>")
+def delete(id):
+    orchard_to_delete = orchard_admin.query.get_or_404(id)  # the id of Contact is used to identify which to delete
+    db.session.delete(orchard_to_delete)  # information of user id to delete sent
+    db.session.commit()
+
+    orchards = orchard_admin.query.order_by(orchard_admin.OR_Name).all()
+    return render_template('CircaAdminHome.html', orchard = orchards)
+
+
+@app.route("/update", methods=["POST", "GET"])
+def update(id):
+    orchard_to_update = orchard_admin.query.get_or_404(id)  # the id of Contact is used to identify which to update
+    if request.method == 'POST':
+        orchard_to_update.Name = request.form("ORname")
+        orchard_to_update.Owner = request.form("owner")
+        orchard_to_update.Location = request.form("location")
+        orchard_to_update.AdminUN = request.form("admUN")
+        orchard_to_update.AdminPW = request.form("admPw")
+        orchard_to_update.ADPhone = request.form("admPhone")
+        orchard_to_update.ADName = request.form("admName")
+        db.session.commit()
+
+        orchards = orchard_admin.query.order_by(orchard_admin.OR_Name).all()
+        return render_template('CircaAdminHome.html', orchard = orchards)
+    else:
+        return render_template('updateOR.html', orchard_to_update = orchard_to_update)
+    
+
+@app.route('/logout')
+def logout():
+    logout_user()  # logs out the current user and sends them to login
+    return redirect(url_for('mainP'))
+
 
 '''
 
@@ -189,7 +249,7 @@ def delete(id):
     return redirect('/view')
 
 
-@app.route("/update/<int:id>", methods=["POST", "GET"])
+@app.route("/update/<int:id>", methods=["POST", "GET"]).
 def update(id):
     contact_to_update = Contact.query.get_or_404(id)  # the id of Contact is used to identify which to update
     if request.method == 'POST':

@@ -1,28 +1,55 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <!-- <meta charset="utf-8">-->
-     <title>Circa Admin Portal</title>
-     <link rel="stylesheet" href="static\style02.css">
- </head>
-    <body>
-       
-      <section>
-        <div class="form-box01">
-            <div class="form-value">
-                <form >
-                    <h2>Ya Made it</h2>
-                    <a href="{{url_for('add_orchard')}}"> <button type="button"  id="login">Add Orchard</button></a>
-               
-                </form>
-            </div>
-        </div>
-     </section>
-
-     <script type="Module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+ 
+ <!DOCTYPE html>
+ <html lang="en" dir="ltr">
+     <head>
         
-    </body>
+            <title>Circa Admin Portal</title>
+            <!-- <link rel="icon" type="image/x-icon" href="/static/tabICN.ico"> -->
+            <link rel="stylesheet" href="static\style.css">
+     </head>
+     <body>
+         
+         <div>
+             <h1>Orchards</h1><br>
+             <div class="container mt-3">
+             <table class="table">
+                 <thead class="table-success">
+                     <tr>
+                        
+                         <th>&emsp;Orchard ID &emsp;</th>
+                         <th>Orchard Name &emsp;</th>
+                         <th>Orchard Owner &emsp;</th>
+                         <th>Location &emsp;</th>
+                         <th>&emsp;Admin Username &emsp;</th>
+                         <th>Admin Password &emsp;</th>
+                         <th>Admin Phone Number &emsp;</th>
+                         <th>Admin Name &emsp;</th>
+                         <th>Update &emsp;</th>
+                         <th>Delete &emsp;</th>
+                     </tr>
+                 </thead><br>
+                     <tr>
+                     {% for orchard in orchard %}
+                         <td>&emsp;{{ orchard.OR_ID }}</td>
+                         <td>{{ orchard.OR_Name }}</td>
+                         <td>{{ orchard.OR_Owner }}</td>
+                         <td>{{ orchard.OR_Location }}</td>
+                         <td>&emsp;{{ orchard.OR_AdminUN}}</td>
+                         <td>{{ orchard.OR_AdminPW }}</td>
+                         <td>{{ orchard.OR_ADPhone }}</td>
+                         <td>{{ orchard.OR_ADName }}</td>
+                         <td><a href="/update/{{orchard.OR_ID}}"> <button type="button" class="btn large btn-outline-success">Update</button></a></td>
+                         <td><a href="/delete/{{orchard.OR_ID}}"> <button type="button" class="btn large btn-outline-danger">Delete</button></a></td>
 
-
-</html>
+                     </tr>
+                     {% endfor %}
+             </table>
+             </div>
+             <a href="{{url_for('add_orchard')}}"> <button type="button"  id="login">Add Orchard</button></a>
+          
+         </div>
+     </body>
+ 
+ 
+ 
+ 

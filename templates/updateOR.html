@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>Circa Admin Portal</title>
+       <!-- <link rel="icon" type="image/x-icon" href="/static/tabICN.ico"> -->
+       <link rel="stylesheet" href="../static/style.css">
+
+    </head>
+    <body>
+        <section>
+           <div class="form-box04">
+                <div class="form-value">
+                    <form action="" method="post">
+                       <h2>Update Orchard</h2> <!-- Name Form-->
+                        <div class="inputbox">  
+                         <ion-icon name="leaf-outline"></ion-icon>
+                         <input type="text" name="ORname" value="{{orchard_to_update.Name}}"  required >
+                         <label for="">Orchard Name</label> <!-- Getting Orchard Name-->
+                        </div>
+                        <div class="inputbox">  
+                         <ion-icon name="person-circle-outline"></ion-icon>
+                         <input type="text" name="owner" value="{{orchard_to_update.Owner}}"  required >
+                         <label for="">Orchard Name</label> <!-- Getting Orchard Name-->
+                        </div>
+                        <div class="inputbox">
+                         <ion-icon name="location-outline"></ion-icon>
+                         <input type="text" name="location" value="{{orchard_to_update.Location}}"  required >
+                         <label for="">Orchard Location</label> <!-- Getting orchard location-->
+                        </div>
+                        <div class="inputbox">
+                         <ion-icon name="person-add-outline"></ion-icon>
+                         <input type="text" name="admUN" value="{{orchard_to_update.AdminUN}}"  required >
+                         <label for="">Admin Username</label> <!-- Getting orchard Admin Username-->
+                        </div>
+                        <div class="inputbox">
+                         <ion-icon name="lock-closed-outline"></ion-icon>
+                         <input type="text" name="admPw" value="{{orchard_to_update.AdminPW}}"  required >
+                         <label for="">Admin Password</label> <!-- Getting orchard Admin Password-->
+                        </div>
+                        <div class="inputbox">
+                         <ion-icon name="call-outline"></ion-icon>
+                         <input type="text" name="admPhone" value="{{orchard_to_update.ADPhone}}"  required >
+                         <label for="">Admin Phone Number</label> <!-- Getting orchard Admin Phone-->
+                        </div>
+                        <div class="inputbox">
+                         <ion-icon name="happy-outline"></ion-icon>
+                         <input type="text" name="admName"  value="{{orchard_to_update.ADName}}"  required >
+                         <label for="">Admin Namer</label> <!-- Getting orchard Admin Name-->
+                        </div>
+
+                        <input type="submit" value="Update User">
+                   </form>
+                </div>
+            </div>
+         </section>
+
+     <script type="Module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+       
+  
+
+    </body>
+   
+
+</html>
